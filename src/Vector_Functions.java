@@ -1,4 +1,4 @@
-public class Vector_functions
+public class Vector_Functions
 {
 	final int x=0, y=1, z=2;
 	final double pi=Math.PI;
