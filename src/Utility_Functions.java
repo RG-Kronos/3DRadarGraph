@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Utility_functions
+public class Utility_Functions
 {
 	final int x=0, y=1, z=2;
 	final int p=20, g=21, c=22;
