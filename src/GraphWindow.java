@@ -1,4 +1,4 @@
-import java.awt.Color;
+import java.awt.Color; 
 import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -39,8 +39,8 @@ public class GraphWindow extends JPanel implements KeyListener, MouseMotionListe
 	 */
 	final double pi=Math.PI;
 	final int x=0, y=1, z=2;
-	final int da=10; // change of angle
-	final int opacity=40;
+	final int opacity=100;
+	final int da=5;
 	
 	/* 
 	 * Components
@@ -64,7 +64,7 @@ public class GraphWindow extends JPanel implements KeyListener, MouseMotionListe
 	 */
 	double resize_frac=1;
 	double radaxis=0.1*Math.min(dim1.width, dim1.height);
-	double zaxis=666*1.1; // multiple of 37 (111 = 37 x 3)
+	double zaxis=666*1.0; // multiple of 37 (111 = 37 x 3)
 	double radaxis_ud=0.0; // updated radial axis length
 	
 	/* 
@@ -72,8 +72,9 @@ public class GraphWindow extends JPanel implements KeyListener, MouseMotionListe
 	 */
 	int np=0; // number of variables/parameters -> nof radial axes
 	int nt=0; // number of test samples -> number of plots at z axis level
-	int ax=-60, ap=0; // angles of rotation around each axis
+	double ax=-60, ap=0; // angles of rotation around each axis
 	int start_hue=100, end_hue=360; // start and end hue values
+	int pli=0; // parameter line index for tracing paramter value change for each test
 	int hue_steps=0;
 	String text="";
 	
@@ -122,17 +123,17 @@ public class GraphWindow extends JPanel implements KeyListener, MouseMotionListe
 	 * Image Icons
 	 */
 	String cwd=System.getProperty("user.dir");
-	ImageIcon data_icon1=new ImageIcon(cwd+"/../Images/data_icon1.png"); // hover button 1 to view parameter values
-	ImageIcon data_icon2=new ImageIcon(cwd+"/../Images/data_icon2.png"); // hover button 2 to view parameter values
-	ImageIcon param_icon=new ImageIcon(cwd+"/../Images/param_icon.png"); // hover button to view highlight parameter
+	ImageIcon data_icon1=new ImageIcon(cwd+"/Images/data_icon1.png"); // hover button 1 to view parameter values
+	ImageIcon data_icon2=new ImageIcon(cwd+"/Images/data_icon2.png"); // hover button 2 to view parameter values
+	ImageIcon param_icon=new ImageIcon(cwd+"/Images/param_icon.png"); // hover button to view highlight parameter
 	int diWidth=data_icon1.getIconWidth();
 	int diHeight=data_icon1.getIconHeight();
 	
 	/* 
 	 * Class objects
 	 */
-	Vector_functions vf=new Vector_functions();
-	Utility_functions uf=new Utility_functions();
+	Vector_Functions vf=new Vector_Functions();
+	Utility_Functions uf=new Utility_Functions();
 	
 	// -----------------------------------------------------------------------------------
 	// Functions -------------------------------------------------------------------------
@@ -673,6 +674,28 @@ public class GraphWindow extends JPanel implements KeyListener, MouseMotionListe
 		graph.setColor(c);
 		graph.fillPolygon(plane[x], plane[y], np);
 	}
+
+	/**
+	 * Tracing change in value of particular parameter for each test
+	 * @param c - Column index for line tracing
+	 */
+	void param_line(int c)
+	{
+		int x1=0, x2=0, y1=0, y2=0;
+
+		graph.setColor(Color.white);
+
+		for(int r=0; r<nt-1; r++)
+		{
+			x1=round(ox + data_radial[r][c][x]); 
+			y1=round(oy - data_radial[r][c][y]);
+				
+			x2=round(ox + data_radial[r+1][c][x]); 
+			y2=round(oy - data_radial[r+1][c][y]);
+
+			graph.drawLine(x1, y1, x2, y2);
+		}
+	}
 	
 	// -----------------------------------------------------------------------------------
 	// Paint Function --------------------------------------------------------------------
@@ -803,6 +826,8 @@ public class GraphWindow extends JPanel implements KeyListener, MouseMotionListe
 			fill_plane(base_radial, base_radial_nz);
 			draw_radial(base_radial, Color.gray);
 		}
+
+		// param_line(pli);
 	}
 	
 	// -----------------------------------------------------------------------------------
@@ -957,6 +982,10 @@ public class GraphWindow extends JPanel implements KeyListener, MouseMotionListe
 				inBorder=BorderFactory.createLineBorder(Color.YELLOW, 1, true);
 
 				data_field[c].setBorder(BorderFactory.createCompoundBorder(outBorder, inBorder));
+
+				pli=c;
+
+				repaint();
 			}
 		}
 	}
