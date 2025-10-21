@@ -3,7 +3,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.util.Scanner;
 import java.util.ArrayList;
 
 // public class MainWindow extends GraphWindow
@@ -13,7 +12,7 @@ public class MainWindow extends GraphWindow
 	
 	final int x=0, y=1, z=2;
 	
-	Vector_functions vf=new Vector_functions();
+	Vector_Functions vf=new Vector_Functions();
 	
 	double[][][] gdp; // graph data points
 	double[][] rdc; // radial data center
@@ -42,13 +41,12 @@ public class MainWindow extends GraphWindow
 		gdp=new double[nt][np][3];
 		rdc=new double[nt][3];
 
-		double rating=0;
-		// int rating_max=rate(10, 10, 10); // SpraySystemsCo Atomizer max rating
-		int rating_max=50; // Graco Atomizer max rating
+		// double rating=0;
+		// int rating_max=rate(10, 10, 10); 
 		
 		for(int r=0; r<data.size(); r++)
 		{
-			rating=data.get(r)[np];
+			// rating=data.get(r)[np];
 
 			for(int c=0; c<np; c++)
 			{	
@@ -62,8 +60,8 @@ public class MainWindow extends GraphWindow
 			// radial center points corresponding to the radar data 
 			rdc[r][x]=0;
 			rdc[r][y]=0;
-			// rdc[r][z]=round(rating * zaxis / rating_max);
-			rdc[r][z]=round(r * zaxis / data.size());
+			// rdc[r][z]=round(rating * zaxis / rating_max); // radial center placed on axis proportional to their rating 
+			rdc[r][z]=round(r * zaxis / data.size()); // radial center placed equidistant on axis
 		}
 	}
 
@@ -149,64 +147,20 @@ public class MainWindow extends GraphWindow
 		int[] inp=null;
 		String exportpath1="", exportpath2="";
 
-		Scanner in=new Scanner(System.in);
-		System.out.println("System INDEX : \n\t(1) SpraySystemsCo  \n\t(2) Graco \n\t(3) Aarna");
-		int idx=in.nextInt();
+		// ----- INPUTS -----
 
-		// System.out.print("Enter CSV Data File Path : "); inputpath=in.nextLine(); 
-		// System.out.println();
+			inputpath="/Users/rohangupta/Desktop/Projects/RadarGraph/TestData/TestData.csv";
+			inp=new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}; // input data columns
+			op=12; // output data column
 
-		// System.out.print("Enter Input Data Column Indexes separated by spaces : ");
-		// String st=in.nextLine();
-		// ArrayList<Integer> columns=new ArrayList<>(); boolean hasinput=true;
-		// st.trim();
+		// ----- INPUTS -----
 
-		// for(String s: st.split(" "))
-		// {
-		// 	columns.add(Integer.valueOf(s));
-		// }
+		// ----- EXPORT PATH -----
 
-		// int[] inp=new int[columns.size()];
-		// for(int i=0; i<columns.size(); i++)
-		// {
-		// 	inp[i]=columns.get(i);
-		// }
+			exportpath1="/Users/rohangupta/Desktop/Projects/RadarGraph/TestData/TestData_FV.csv"; // face value data
+			exportpath2="/Users/rohangupta/Desktop/Projects/RadarGraph/TestData/TestData_NV.csv"; // normalised data
 
-		// System.out.print("\nEnter Output Data Column Index : "); op=in.nextInt();
-		// System.out.println();
-
-		if(idx==1)
-		{
-			inputpath="/Users/rohangupta/Desktop/Files/AtomizerData/SSC.csv";
-			inp=new int[]{7, 8, 9, 10, 11, 12, 13, 15, 19}; op=24;
-
-			exportpath1="/Users/rohangupta/Desktop/Files/MLR_Data/InputData_SSC_FV.csv"; // face value data
-			exportpath2="/Users/rohangupta/Desktop/Files/MLR_Data/InputData_SSC_NV.csv"; // normalised data
-		}
-		else if(idx==2)
-		{
-			inputpath="/Users/rohangupta/Desktop/Files/AtomizerData/Graco.csv";
-			inp=new int[] {5, 6, 7, 8, 9, 10, 11, 12}; op=17;
-
-			exportpath1="/Users/rohangupta/Desktop/Files/MLR_Data/InputData_GRC_FV.csv"; // face value data
-			exportpath2="/Users/rohangupta/Desktop/Files/MLR_Data/InputData_GRC_NV.csv"; // normalised data
-		}
-		else if(idx==3)
-		{
-			inputpath="/Users/rohangupta/Desktop/Files/AtomizerData/Aarna.csv";
-			// inp=new int[] {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 34, 35, 36}; op=25;
-			inp=new int[] {6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}; op=25;
-
-			exportpath1="/Users/rohangupta/Desktop/Files/MLR_Data/InputData_Aarna_FV.csv"; // face value data
-			exportpath2="/Users/rohangupta/Desktop/Files/MLR_Data/InputData_Aarna_NV.csv"; // normalised data
-
-		}
-		else
-		{
-			in.close();
-			System.out.println("Incorrect Input");
-			return;
-		}
+		// ----- EXPORT PATH -----
 		
 		ArrayList<String[]> Stringdata=new ArrayList<>(); // data in String format
 
@@ -237,7 +191,7 @@ public class MainWindow extends GraphWindow
 		}
 
 		MainWindow mw=new MainWindow();
-		Utility_functions uf=new Utility_functions();
+		Utility_Functions uf=new Utility_Functions();
 
 		String[] head=new String[inp.length];
 
@@ -278,6 +232,5 @@ public class MainWindow extends GraphWindow
 			mw.setFrame();
 			mw.update_graph();
 		}
-		in.close();
 	}
 }
